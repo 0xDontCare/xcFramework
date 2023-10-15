@@ -7,11 +7,10 @@ Simply put, this repository is a personal playground for learning, practicing an
 
 ## Planned modules in near future
 - Basic dynamically allocated data structures with various supporting functions
- - Arrays
- - Linked lists
- - Stack
- - Queue
- - Dictionary
+    - Arrays
+    - Linked lists
+    - Stacks and queues
+    - Dictionary
 - Basic linear algebra module
- - Matrices, vectors and their operations
- - Linear system solving
+    - Matrices, vectors and their operations
+    - Linear system solver
