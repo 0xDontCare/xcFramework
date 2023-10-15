@@ -52,6 +52,6 @@ Mkfile.old
 dkms.conf
 
 # unnecessary folders
-./bin/*
-./obj/*
-./.vscode/*
+bin/*
+obj/*
+.vscode/*
