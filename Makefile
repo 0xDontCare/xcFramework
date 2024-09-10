@@ -1,43 +1,52 @@
 # Compiler and flags
-CC = gcc
-CFLAGS = -Wall -Wextra -Werror -pedantic -std=c11 -g -Iinclude
+CC = clang
+CFLAGS = -Wall -Wextra -Wpedantic -Werror -Wshadow -Wstrict-overflow -std=gnu11 -Iinclude
+AR = llvm-ar
+ARFLAGS = rcs
 
-# Source and object files
-SRC = $(wildcard src/*.c)
-OBJ = $(SRC:src/%.c=obj/%.o)
+# Directories
+SRC_DIR = src
+INCLUDE_DIR = include
+TEST_DIR = tests
+BUILD_DIR = build
+LIB_DIR = lib
 
-# Executable name
-EXEC = bin/main
-DEPS = $(wildcard include/*.h)
+# Library name
+LIB_NAME = libxcFramework.a
 
-# Test files and executables
-TESTS = $(wildcard tests/*.c)
-TESTS_EXEC = $(TESTS:tests/%.c=bin/test_%)
+# Source files
+SRC_FILES = $(shell find $(SRC_DIR) -name '*.c')
+OBJ_FILES = $(SRC_FILES:$(SRC_DIR)/%.c=$(BUILD_DIR)/%.o)
 
-# Default target
-all: $(EXEC) $(TESTS_EXEC)
+# Test files
+TEST_FILES = $(shell find $(TEST_DIR) -name '*.c')
+TEST_OBJ_FILES = $(TEST_FILES:$(TEST_DIR)/%.c=$(BUILD_DIR)/%.o)
+TEST_EXECUTABLES = $(TEST_FILES:$(TEST_DIR)/%.c=$(BUILD_DIR)/%)
 
-# Creating executable from object files
-$(EXEC): $(OBJ)
-	@echo "Linking $@ ..."
-	$(CC) $(CFLAGS) -o $@ $^
-	@echo "Done"
+# Targets
+.PHONY: all clean
 
-# Creating object files from source files
-obj/%.o: src/%.c $(DEPS)
-	@echo "Compiling $< ..."
-	$(CC) $(CFLAGS) -c -o $@ $<
-	@echo "Done"
+all: $(LIB_DIR)/$(LIB_NAME) $(TEST_EXECUTABLES)
 
-# Creating test executables from test files
-bin/test_%: tests/%.c $(DEPS) $(OBJ)
-	@echo "Compiling and linking $< ..."
-	$(eval TEST_OBJ := $(filter-out obj/main.o, $(OBJ))) 
-	$(CC) $(CFLAGS) -o $@ $< $(TEST_OBJ)
-	@echo "Done"
+# Build static library
+$(LIB_DIR)/$(LIB_NAME): $(OBJ_FILES)
+	@mkdir -p $(LIB_DIR)
+	$(AR) $(ARFLAGS) $@ $^
 
-# Cleaning object files and executable
+# Build object files
+$(BUILD_DIR)/%.o: $(SRC_DIR)/%.c
+	@mkdir -p $(dir $@)
+	$(CC) $(CFLAGS) -c $< -o $@
+
+# Build test object files
+$(BUILD_DIR)/%.o: $(TEST_DIR)/%.c
+	@mkdir -p $(dir $@)
+	$(CC) $(CFLAGS) -c $< -o $@
+
+# Build test executables
+$(BUILD_DIR)/%: $(BUILD_DIR)/%.o $(LIB_DIR)/$(LIB_NAME)
+	$(CC) $< -L$(LIB_DIR) -lxcFramework -o $@ -lcunit
+
+# Clean build artifacts
 clean:
-	@rm -rf ./bin/*
-
-.PHONY: all
+	rm -rf $(BUILD_DIR) $(LIB_DIR)

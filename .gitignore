@@ -51,7 +51,8 @@ Module.symvers
 Mkfile.old
 dkms.conf
 
-# unnecessary folders
-bin/*
-obj/*
+# unnecessary files/folders
 .vscode/*
+build/*
+lib/*
+compile_commands.json
