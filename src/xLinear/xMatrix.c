@@ -62,7 +62,7 @@ inline float xMatrix_get(const xMatrix *matrix, xSize row, xSize col)
 {
     // validate arguments
     if (!xMatrix_isValid(matrix) || row >= matrix->rows || col >= matrix->cols) {
-        return (float)0x7FC00000;  // quiet NaN
+        return 0.0f / 0.0f;  // NaN
     }
 
     // get matrix element
