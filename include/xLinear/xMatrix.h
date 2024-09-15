@@ -35,7 +35,7 @@ typedef struct xMatrix_s xMatrix;
  *
  * @param rows Number of rows.
  * @param cols Number of columns.
- * @return xMatrix object filled with zeros.
+ * @return Pointer to zero-initialized xMatrix object.
  */
 xMatrix *xMatrix_new(xSize rows, xSize cols);
 
@@ -55,7 +55,7 @@ void xMatrix_free(xMatrix *matrix);
  * Get number of rows in the matrix.
  *
  * @param matrix Pointer to xMatrix object.
- * @return xSize Number of rows.
+ * @return xSize number of rows.
  */
 extern xSize xMatrix_getRows(const xMatrix *matrix);
 
@@ -64,7 +64,7 @@ extern xSize xMatrix_getRows(const xMatrix *matrix);
  * Get number of columns in the matrix.
  *
  * @param matrix Pointer to xMatrix object.
- * @return xSize Number of columns.
+ * @return xSize number of columns.
  */
 extern xSize xMatrix_getCols(const xMatrix *matrix);
 
@@ -73,7 +73,7 @@ extern xSize xMatrix_getCols(const xMatrix *matrix);
  * Check if matrix is valid.
  *
  * @param matrix Pointer to xMatrix object.
- * @return int Non-zero if matrix is valid, zero otherwise.
+ * @return xBool True (non-zero) if matrix is valid, false (zero) otherwise.
  */
 extern xBool xMatrix_isValid(const xMatrix *matrix);
 
@@ -95,25 +95,22 @@ extern void xMatrix_set(xMatrix *matrix, xSize row, xSize col, float value);
  * @param matrix Pointer to xMatrix object.
  * @param row Index of the row.
  * @param col Index of the column.
- * @return float Value at given row and column.
+ * @return float value at given row and column.
  *
  * @note
- * If matrix is invalid or indices are out of range, NaN is returned.
+ * If passed matrix is invalid or indices are out of range, NaN is returned.
  */
 extern float xMatrix_get(const xMatrix *matrix, xSize row, xSize col);
 
 /**
  * @brief
- * Create copy of matrix.
+ * Create deep copy of matrix object.
  *
  * @param matrix Pointer to xMatrix object.
- * @return xMatrix Copy of matrix.
+ * @return Pointer to xMatrix object containing data copy.
  *
  * @note
- * If matrix is invalid, invalid matrix is returned.
- *
- * @note
- * Copy of matrix is deep copy, meaning that new memory is allocated for data.
+ * If passed matrix is invalid, NULL is returned.
  */
 xMatrix *xMatrix_duplicate(const xMatrix *matrix);
 
@@ -131,10 +128,10 @@ void xMatrix_fill(xMatrix *matrix, float value);
  * Create identity matrix of given dimension.
  *
  * @param dimension Dimension of the identity matrix.
- * @return xMatrix Identity matrix.
+ * @return Pointer to identity xMatrix object.
  *
  * @note
- * If dimension is zero or allocation fails, invalid matrix is returned.
+ * If dimension is zero or allocation fails, NULL is returned.
  */
 xMatrix *xMatrix_identity(xSize dimension);
 
@@ -143,10 +140,10 @@ xMatrix *xMatrix_identity(xSize dimension);
  * Transpose matrix.
  *
  * @param matrix Pointer to xMatrix object.
- * @return xMatrix Transposed matrix.
+ * @return Pointer to xMatrix containing transposed matrix.
  *
  * @note
- * If matrix is invalid, invalid matrix is returned.
+ * If passed matrix is invalid, NULL is returned.
  */
 xMatrix *xMatrix_transpose(const xMatrix *matrix);
 
@@ -156,10 +153,10 @@ xMatrix *xMatrix_transpose(const xMatrix *matrix);
  *
  * @param lhs Left-hand side matrix.
  * @param rhs Right-hand side matrix.
- * @return xMatrix Sum of two matrices.
+ * @return Pointer to xMatrix containing sum of two matrices.
  *
  * @note
- * If matrices are invalid or have different dimensions, invalid matrix is returned.
+ * If either of passed matrices are invalid or they don't have same dimensions, NULL is returned.
  */
 xMatrix *xMatrix_add(const xMatrix *lhs, const xMatrix *rhs);
 
@@ -169,10 +166,10 @@ xMatrix *xMatrix_add(const xMatrix *lhs, const xMatrix *rhs);
  *
  * @param lhs Left-hand side matrix.
  * @param rhs Right-hand side matrix.
- * @return xMatrix Difference of two matrices.
+ * @return Pointer to xMatrix containing difference of two matrices.
  *
  * @note
- * If matrices are invalid or have different dimensions, invalid matrix is returned.
+ * If either of passed matrices are invalid or they don't have same dimensions, NULL is returned.
  */
 xMatrix *xMatrix_sub(const xMatrix *lhs, const xMatrix *rhs);
 
@@ -182,10 +179,10 @@ xMatrix *xMatrix_sub(const xMatrix *lhs, const xMatrix *rhs);
  *
  * @param lhs Left-hand side matrix.
  * @param rhs Right-hand side matrix.
- * @return xMatrix Product of two matrices.
+ * @return Pointer to xMatrix object containing matrix product of two matrices.
  *
  * @note
- * If matrices are invalid or have incompatible dimensions, invalid matrix is returned.
+ * If either of passed matrices is invalid or they have incompatible dimensions, NULL is returned.
  */
 xMatrix *xMatrix_mul(const xMatrix *lhs, const xMatrix *rhs);
 
@@ -195,10 +192,10 @@ xMatrix *xMatrix_mul(const xMatrix *lhs, const xMatrix *rhs);
  *
  * @param lhs Pointer to left-hand side matrix.
  * @param rhs Pointer to right-hand side matrix.
- * @return xMatrix Hadamard product of two matrices.
+ * @return Pointer to xMatrix object containing Hadamard product of two matrices.
  *
  * @note
- * If matrices are invalid or have different dimensions, invalid matrix is returned.
+ * If either of passed matrices are invalid or they don't have same dimensions, NULL is returned.
  *
  * @note
  * Hadamard product is element-wise multiplication of two matrices.
@@ -211,10 +208,10 @@ xMatrix *xMatrix_dotmul(const xMatrix *lhs, const xMatrix *rhs);
  *
  * @param matrix Pointer to xMatrix object.
  * @param scalar Scalar value.
- * @return xMatrix Sum of matrix and scalar.
+ * @return Pointer to xMatrix object containing sum of passed matrix elements and scalar.
  *
  * @note
- * If matrix is invalid, invalid matrix is returned.
+ * If passed matrix is invalid, NULL is returned.
  */
 xMatrix *xMatrix_scalarAdd(const xMatrix *matrix, float scalar);
 
@@ -224,10 +221,10 @@ xMatrix *xMatrix_scalarAdd(const xMatrix *matrix, float scalar);
  *
  * @param matrix Pointer to xMatrix object.
  * @param scalar Scalar value.
- * @return xMatrix Difference of matrix and scalar.
+ * @return Pointer to xMatrix object containing difference of passed matrix elements and scalar.
  *
  * @note
- * If matrix is invalid, invalid matrix is returned.
+ * If passed matrix is invalid, NULL is returned.
  */
 xMatrix *xMatrix_scalarSub(const xMatrix *matrix, float scalar);
 
@@ -237,7 +234,7 @@ xMatrix *xMatrix_scalarSub(const xMatrix *matrix, float scalar);
  *
  * @param matrix Pointer to xMatrix object.
  * @param scalar Scalar value.
- * @return xMatrix Product of matrix and scalar.
+ * @return Pointer to xMatrix object containing matrix scaled by scalar.
  */
 xMatrix *xMatrix_scalarMul(const xMatrix *matrix, float scalar);
 
@@ -247,7 +244,7 @@ xMatrix *xMatrix_scalarMul(const xMatrix *matrix, float scalar);
  *
  * @param matrix Pointer to xMatrix object.
  * @param scalar Scalar value.
- * @return xMatrix Quotient of matrix and scalar.
+ * @return Pointer to xMatrix object containing matrix scaled by reciprocal of scalar.
  */
 xMatrix *xMatrix_scalarDiv(const xMatrix *matrix, float scalar);
 
@@ -257,10 +254,10 @@ xMatrix *xMatrix_scalarDiv(const xMatrix *matrix, float scalar);
  *
  * @param matrix Pointer to xMatrix object.
  * @param power Power to raise matrix to.
- * @return xMatrix Matrix raised to given power.
+ * @return Pointer to xMatrix object containing matrix raised to given power.
  *
  * @note
- * If matrix is invalid, invalid matrix is returned.
+ * If matrix is invalid, NULL is returned.
  */
 // xMatrix xMatrix_pow(const xMatrix *matrix, float power);
 
@@ -273,10 +270,10 @@ xMatrix *xMatrix_scalarDiv(const xMatrix *matrix, float scalar);
  * @param col1 Lower bound of column.
  * @param row2 Upper bound of row.
  * @param col2 Upper bound of column.
- * @return xMatrix Submatrix of matrix.
+ * @return Pointer to xMatrix object containing submatrix in given bounds.
  *
  * @note
- * If matrix is invalid or bounds are out of range, invalid matrix is returned.
+ * If matrix is invalid or bounds are out of range, NULL is returned.
  *
  * @note
  * Lower bound is inclusive, upper bound is exclusive.
@@ -290,10 +287,10 @@ xMatrix *xMatrix_submatrix(const xMatrix *matrix, xSize row1, xSize col1, xSize 
  * @param matrix Pointer to xMatrix object.
  * @param row Row to exclude from matrix.
  * @param col Column to exclude from matrix.
- * @return xMatrix Minor of matrix.
+ * @return Pointer to xMatrix object containing minor of matrix.
  *
  * @note
- * If matrix is invalid or indices are out of range, invalid matrix is returned.
+ * If matrix is invalid or indices are out of range, NULL is returned.
  */
 xMatrix *xMatrix_minor(const xMatrix *matrix, xSize row, xSize col);
 
@@ -303,10 +300,10 @@ xMatrix *xMatrix_minor(const xMatrix *matrix, xSize row, xSize col);
  *
  * @param matrix Pointer to xMatrix object.
  * @param func Function to apply to each element.
- * @return xMatrix Matrix with function applied to each element.
+ * @return Pointer to xMatrix object containing result of function applied to each element.
  *
  * @note
- * If matrix is invalid, invalid matrix is returned.
+ * If matrix is invalid, NULL is returned.
  *
  * @note
  * Function should take float as argument and return float.
@@ -320,10 +317,10 @@ xMatrix *xMatrix_map(const xMatrix *matrix, float (*func)(float));
  * @param lhs Left-hand side matrix.
  * @param rhs Right-hand side matrix.
  * @param func Function to apply to each element.
- * @return xMatrix Matrix with function applied to each element.
+ * @return Pointer to xMatrix object containing result of function applied to matching elements of two matrices.
  *
  * @note
- * If matrices are invalid or have different dimensions, invalid matrix is returned.
+ * If matrices are invalid or have different dimensions, NULL is returned.
  *
  * @note
  * Function should take two floats as arguments and return float.
@@ -337,10 +334,10 @@ xMatrix *xMatrix_map2(const xMatrix *lhs, const xMatrix *rhs, float (*func)(floa
  * @param matrix Pointer to xMatrix object.
  * @param scalar Scalar value.
  * @param func Function to apply to each element.
- * @return xMatrix Matrix with function applied to each element.
+ * @return Pointer to xMatrix object containing result of function applied to each element and scalar.s
  *
  * @note
- * If matrix is invalid, invalid matrix is returned.
+ * If matrix is invalid, NULL is returned.
  *
  * @note
  * Function should take two floats as arguments and return float.
