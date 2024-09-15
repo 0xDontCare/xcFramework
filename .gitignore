@@ -56,4 +56,7 @@ dkms.conf
 build/*
 lib/*
 compile_commands.json
+
+# Clangd files
 .cache/*
+.clang-format
