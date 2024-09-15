@@ -37,7 +37,7 @@ typedef struct xMatrix_s xMatrix;
  * @param cols Number of columns.
  * @return xMatrix object filled with zeros.
  */
-xMatrix xMatrix_new(xSize rows, xSize cols);
+xMatrix *xMatrix_new(xSize rows, xSize cols);
 
 /**
  * @brief
@@ -57,7 +57,7 @@ void xMatrix_free(xMatrix *matrix);
  * @param matrix Pointer to xMatrix object.
  * @return xSize Number of rows.
  */
-inline xSize xMatrix_getRows(const xMatrix *matrix);
+extern xSize xMatrix_getRows(const xMatrix *matrix);
 
 /**
  * @brief
@@ -66,7 +66,7 @@ inline xSize xMatrix_getRows(const xMatrix *matrix);
  * @param matrix Pointer to xMatrix object.
  * @return xSize Number of columns.
  */
-inline xSize xMatrix_getCols(const xMatrix *matrix);
+extern xSize xMatrix_getCols(const xMatrix *matrix);
 
 /**
  * @brief
@@ -75,7 +75,7 @@ inline xSize xMatrix_getCols(const xMatrix *matrix);
  * @param matrix Pointer to xMatrix object.
  * @return int Non-zero if matrix is valid, zero otherwise.
  */
-inline int xMatrix_isValid(const xMatrix *matrix);
+extern xBool xMatrix_isValid(const xMatrix *matrix);
 
 /**
  * @brief
@@ -86,7 +86,7 @@ inline int xMatrix_isValid(const xMatrix *matrix);
  * @param col Index of the column.
  * @param value Value to set.
  */
-inline void xMatrix_set(xMatrix *matrix, xSize row, xSize col, float value);
+extern void xMatrix_set(xMatrix *matrix, xSize row, xSize col, float value);
 
 /**
  * @brief
@@ -100,7 +100,7 @@ inline void xMatrix_set(xMatrix *matrix, xSize row, xSize col, float value);
  * @note
  * If matrix is invalid or indices are out of range, NaN is returned.
  */
-inline float xMatrix_get(const xMatrix *matrix, xSize row, xSize col);
+extern float xMatrix_get(const xMatrix *matrix, xSize row, xSize col);
 
 /**
  * @brief
@@ -115,7 +115,7 @@ inline float xMatrix_get(const xMatrix *matrix, xSize row, xSize col);
  * @note
  * Copy of matrix is deep copy, meaning that new memory is allocated for data.
  */
-xMatrix xMatrix_duplicate(const xMatrix *matrix);
+xMatrix *xMatrix_duplicate(const xMatrix *matrix);
 
 /**
  * @brief
@@ -136,7 +136,7 @@ void xMatrix_fill(xMatrix *matrix, float value);
  * @note
  * If dimension is zero or allocation fails, invalid matrix is returned.
  */
-xMatrix xMatrix_identity(xSize dimension);
+xMatrix *xMatrix_identity(xSize dimension);
 
 /**
  * @brief
@@ -148,7 +148,7 @@ xMatrix xMatrix_identity(xSize dimension);
  * @note
  * If matrix is invalid, invalid matrix is returned.
  */
-xMatrix xMatrix_transpose(const xMatrix *matrix);
+xMatrix *xMatrix_transpose(const xMatrix *matrix);
 
 /**
  * @brief
@@ -161,7 +161,7 @@ xMatrix xMatrix_transpose(const xMatrix *matrix);
  * @note
  * If matrices are invalid or have different dimensions, invalid matrix is returned.
  */
-xMatrix xMatrix_add(const xMatrix *lhs, const xMatrix *rhs);
+xMatrix *xMatrix_add(const xMatrix *lhs, const xMatrix *rhs);
 
 /**
  * @brief
@@ -174,7 +174,7 @@ xMatrix xMatrix_add(const xMatrix *lhs, const xMatrix *rhs);
  * @note
  * If matrices are invalid or have different dimensions, invalid matrix is returned.
  */
-xMatrix xMatrix_sub(const xMatrix *lhs, const xMatrix *rhs);
+xMatrix *xMatrix_sub(const xMatrix *lhs, const xMatrix *rhs);
 
 /**
  * @brief
@@ -187,7 +187,7 @@ xMatrix xMatrix_sub(const xMatrix *lhs, const xMatrix *rhs);
  * @note
  * If matrices are invalid or have incompatible dimensions, invalid matrix is returned.
  */
-xMatrix xMatrix_mul(const xMatrix *lhs, const xMatrix *rhs);
+xMatrix *xMatrix_mul(const xMatrix *lhs, const xMatrix *rhs);
 
 /**
  * @brief
@@ -203,7 +203,7 @@ xMatrix xMatrix_mul(const xMatrix *lhs, const xMatrix *rhs);
  * @note
  * Hadamard product is element-wise multiplication of two matrices.
  */
-xMatrix xMatrix_dotmul(const xMatrix *lhs, const xMatrix *rhs);
+xMatrix *xMatrix_dotmul(const xMatrix *lhs, const xMatrix *rhs);
 
 /**
  * @brief
@@ -216,7 +216,7 @@ xMatrix xMatrix_dotmul(const xMatrix *lhs, const xMatrix *rhs);
  * @note
  * If matrix is invalid, invalid matrix is returned.
  */
-xMatrix xMatrix_scalarAdd(const xMatrix *matrix, float scalar);
+xMatrix *xMatrix_scalarAdd(const xMatrix *matrix, float scalar);
 
 /**
  * @brief
@@ -229,7 +229,7 @@ xMatrix xMatrix_scalarAdd(const xMatrix *matrix, float scalar);
  * @note
  * If matrix is invalid, invalid matrix is returned.
  */
-xMatrix xMatrix_scalarSub(const xMatrix *matrix, float scalar);
+xMatrix *xMatrix_scalarSub(const xMatrix *matrix, float scalar);
 
 /**
  * @brief
@@ -239,7 +239,7 @@ xMatrix xMatrix_scalarSub(const xMatrix *matrix, float scalar);
  * @param scalar Scalar value.
  * @return xMatrix Product of matrix and scalar.
  */
-xMatrix xMatrix_scalarMul(const xMatrix *matrix, float scalar);
+xMatrix *xMatrix_scalarMul(const xMatrix *matrix, float scalar);
 
 /**
  * @brief
@@ -249,7 +249,7 @@ xMatrix xMatrix_scalarMul(const xMatrix *matrix, float scalar);
  * @param scalar Scalar value.
  * @return xMatrix Quotient of matrix and scalar.
  */
-xMatrix xMatrix_scalarDiv(const xMatrix *matrix, float scalar);
+xMatrix *xMatrix_scalarDiv(const xMatrix *matrix, float scalar);
 
 /**
  * @brief
@@ -281,7 +281,7 @@ xMatrix xMatrix_scalarDiv(const xMatrix *matrix, float scalar);
  * @note
  * Lower bound is inclusive, upper bound is exclusive.
  */
-xMatrix xMatrix_submatrix(const xMatrix *matrix, xSize row1, xSize col1, xSize row2, xSize col2);
+xMatrix *xMatrix_submatrix(const xMatrix *matrix, xSize row1, xSize col1, xSize row2, xSize col2);
 
 /**
  * @brief
@@ -295,7 +295,7 @@ xMatrix xMatrix_submatrix(const xMatrix *matrix, xSize row1, xSize col1, xSize r
  * @note
  * If matrix is invalid or indices are out of range, invalid matrix is returned.
  */
-xMatrix xMatrix_minor(const xMatrix *matrix, xSize row, xSize col);
+xMatrix *xMatrix_minor(const xMatrix *matrix, xSize row, xSize col);
 
 /**
  * @brief
@@ -311,7 +311,7 @@ xMatrix xMatrix_minor(const xMatrix *matrix, xSize row, xSize col);
  * @note
  * Function should take float as argument and return float.
  */
-xMatrix xMatrix_map(const xMatrix *matrix, float (*func)(float));
+xMatrix *xMatrix_map(const xMatrix *matrix, float (*func)(float));
 
 /**
  * @brief
@@ -328,7 +328,7 @@ xMatrix xMatrix_map(const xMatrix *matrix, float (*func)(float));
  * @note
  * Function should take two floats as arguments and return float.
  */
-xMatrix xMatrix_map2(const xMatrix *lhs, const xMatrix *rhs, float (*func)(float, float));
+xMatrix *xMatrix_map2(const xMatrix *lhs, const xMatrix *rhs, float (*func)(float, float));
 
 /**
  * @brief
@@ -345,7 +345,7 @@ xMatrix xMatrix_map2(const xMatrix *lhs, const xMatrix *rhs, float (*func)(float
  * @note
  * Function should take two floats as arguments and return float.
  */
-xMatrix xMatrix_mapScalar(const xMatrix *matrix, float scalar, float (*func)(float, float));
+xMatrix *xMatrix_mapScalar(const xMatrix *matrix, float scalar, float (*func)(float, float));
 
 #ifdef __cplusplus
 }
