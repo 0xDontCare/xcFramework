@@ -36,9 +36,7 @@ void xMatrix_free(xMatrix *matrix)
     }
 
     free(matrix->data);
-    matrix->data = NULL;
-    matrix->rows = 0;
-    matrix->cols = 0;
+    free(matrix);
 }
 
 inline xSize xMatrix_getRows(const xMatrix *matrix) { return (matrix) ? matrix->rows : 0; }
