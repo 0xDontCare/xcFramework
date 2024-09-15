@@ -18,10 +18,14 @@ xMatrix *xMatrix_new(xSize rows, xSize cols)
     }
 
     // create matrix object
-    xMatrix *mat = NULL;
+    xMatrix *mat = (xMatrix *)malloc(sizeof(xMatrix));
+    if (!mat) {
+        return NULL;
+    }
     mat->data = (float *)calloc(rows * cols, sizeof(float));
     if (!mat->data) {
-        return mat;
+        free(mat);
+        return NULL;
     }
     mat->rows = rows;
     mat->cols = cols;
