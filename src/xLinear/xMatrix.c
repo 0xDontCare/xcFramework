@@ -31,11 +31,15 @@ xMatrix *xMatrix_new(xSize rows, xSize cols)
 
 void xMatrix_free(xMatrix *matrix)
 {
-    if (!matrix || !matrix->data) {
+    if (!matrix) {
         return;
     }
 
-    free(matrix->data);
+    if (matrix->data) {
+        free(matrix->data);
+        matrix->data = NULL;
+    }
+
     free(matrix);
 }
 
