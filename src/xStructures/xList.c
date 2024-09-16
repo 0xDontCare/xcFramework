@@ -17,24 +17,35 @@ struct xList_s {
     xSize listSize;
 };
 
-xList xList_new(xSize elemSize)
+xList *xList_new(xSize elemSize)
 {
     // validate arguments
     if (elemSize == 0) {
-        return (xList){0};
+        return NULL;
     }
 
-    xList list = {0};
-    list.elemSize = elemSize;
+    // allocate memory for the list
+    xList *list = (xList *)malloc(sizeof(xList));
+    if (!list) {
+        return NULL;
+    }
+
+    // initialize list attributes
+    list->elemSize = elemSize;
+    list->listSize = 0;
+    list->head = NULL;
+    list->tail = NULL;
     return list;
 }
 
 void xList_free(xList *list)
 {
-    if (!list || !list->head) {
+    // validate arguments
+    if (!list) {
         return;
     }
 
+    // free all nodes in the list
     xListNode *current = list->head;
     while (current) {
         xListNode *next = current->next;
@@ -42,10 +53,11 @@ void xList_free(xList *list)
         current = next;
     }
 
+    // make nodes inaccessible and free list descriptor
     list->head = NULL;
     list->tail = NULL;
-    list->listSize = 0;
-    list->elemSize = 0;
+
+    free(list);
 }
 
 inline xSize xList_getSize(const xList *list) { return (list) ? list->listSize : 0; }
@@ -114,6 +126,15 @@ void *xList_remove(xList *list, xSize index)
     // validate arguments
     if (!list || index >= list->listSize) {
         return NULL;
+    }
+
+    // special cases for start and end of the list
+    if (index == 0) {
+        // start of the list
+        return xList_popFront(list);
+    } else if (index == list->listSize - 1) {
+        // end of the list
+        return xList_popBack(list);
     }
 
     // find node at specified index

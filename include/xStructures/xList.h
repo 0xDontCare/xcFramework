@@ -34,13 +34,13 @@ typedef struct xList_s xList;
  * Creates empty xList object.
  *
  * @param elemSize Size of single element in bytes.
- * @return xList object with no data.
+ * @return Pointer to xList object with no data.
  *
  * @note
- * If function fails to allocate memory, returned object will be invalid to use. You can use xList_isValid() to check if object is
- * valid.
+ * If function fails to allocate memory or `elemSize` is zero, returned object will be invalid to use. You can use xList_isValid()
+ * to check if created object is valid.
  */
-xList xList_new(xSize elemSize);
+xList *xList_new(xSize elemSize);
 
 /**
  * @brief
@@ -63,7 +63,7 @@ void xList_free(xList *list);
  * @param list Pointer to xList object.
  * @return xSize Number of elements in list.
  */
-inline xSize xList_getSize(const xList *list);
+extern xSize xList_getSize(const xList *list);
 
 /**
  * @brief
@@ -72,7 +72,7 @@ inline xSize xList_getSize(const xList *list);
  * @param list Pointer to xList object.
  * @return xSize Size of single element in list in bytes.
  */
-inline xSize xList_getElemSize(const xList *list);
+extern xSize xList_getElemSize(const xList *list);
 
 /**
  * @brief
@@ -81,7 +81,7 @@ inline xSize xList_getElemSize(const xList *list);
  * @param list Pointer to xList object.
  * @return xBool Non-zero if object is valid, zero otherwise.
  */
-inline xBool xList_isValid(const xList *list);
+extern xBool xList_isValid(const xList *list);
 
 /**
  * @brief
