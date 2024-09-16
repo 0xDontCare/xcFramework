@@ -99,9 +99,9 @@ void *xStack_pop(xStack *stack)
     }
 
     // copy data from stack to return element, clear data in stack and decrement stack size
+    stack->stackSize--;
     xMemCopy(ret, (void *)((char *)stack->data + stack->stackSize * stack->elemSize), stack->elemSize);
     xMemSet((void *)((char *)stack->data + stack->stackSize * stack->elemSize), 0, stack->elemSize);  // could be removed??
-    stack->stackSize--;
 
     return ret;
 }
