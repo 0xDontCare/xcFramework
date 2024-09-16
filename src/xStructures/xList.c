@@ -1,5 +1,6 @@
 #include "xStructures/xList.h"
 #include <stdlib.h>  // standard library (for malloc, free)
+#include "xBase/xMemtools.h"
 #include "xBase/xTypes.h"
 
 // TODO: remove dependency on stdlib.h (custom memory allocation functions)
@@ -84,16 +85,17 @@ void xList_insert(xList *list, const void *data, xSize index)
         return;
     }
 
-    // allocate memory for new node
-    xListNode *newNode = (xListNode *)malloc(sizeof(xListNode));
+    // allocate memory for new node (data is right after the descriptor for slightly better cache locality)
+    xListNode *newNode = (xListNode *)malloc(sizeof(xListNode) + list->elemSize);
     if (!newNode) {
         return;
     }
 
-    // assign data to the new node
-    newNode->data = (void *)data;
+    // copy data to the new node
+    newNode->data = (void *)((char *)newNode + sizeof(xListNode));  // node data is right after its descriptor
+    xMemCopy(newNode->data, data, list->elemSize);
 
-    // somewhere in the middle of the list
+    // target node is somewhere in the middle of the list
     xListNode *current = list->head;
     for (xSize i = 0; i < index; i++) {
         current = current->next;
@@ -155,8 +157,9 @@ void *xList_remove(xList *list, xSize index)
         list->tail = current->prev;
     }
 
-    // save data and free memory
-    void *data = current->data;
+    // create a copy of the data, free memory and return the data
+    void *data = (void *)malloc(list->elemSize);
+    xMemCopy(data, current->data, list->elemSize);
     free(current);
     list->listSize--;
 
@@ -171,13 +174,14 @@ void xList_pushFront(xList *list, const void *data)
     }
 
     // allocate memory for new node
-    xListNode *newNode = (xListNode *)malloc(sizeof(xListNode));
+    xListNode *newNode = (xListNode *)malloc(sizeof(xListNode) + list->elemSize);
     if (!newNode) {
         return;
     }
 
-    // assign data to the new node
-    newNode->data = (void *)data;
+    // copy data to the new node
+    newNode->data = (void *)((char *)newNode + sizeof(xListNode));  // node data is right after its descriptor
+    xMemCopy(newNode->data, data, list->elemSize);
 
     // insert node into the list
     newNode->next = list->head;
@@ -199,13 +203,14 @@ void xList_pushBack(xList *list, const void *data)
     }
 
     // allocate memory for new node
-    xListNode *newNode = (xListNode *)malloc(sizeof(xListNode));
+    xListNode *newNode = (xListNode *)malloc(sizeof(xListNode) + list->elemSize);
     if (!newNode) {
         return;
     }
 
-    // assign data to the new node
-    newNode->data = (void *)data;
+    // copy data to the new node
+    newNode->data = (void *)((char *)newNode + sizeof(xListNode));  // node data is right after its descriptor
+    xMemCopy(newNode->data, data, list->elemSize);
 
     // insert node into the list
     newNode->next = NULL;
@@ -235,8 +240,9 @@ void *xList_popFront(xList *list)
         list->tail = NULL;
     }
 
-    // save data and free memory
-    void *data = current->data;
+    // create a copy of the data, free memory and return the data
+    void *data = (void *)malloc(list->elemSize);
+    xMemCopy(data, current->data, list->elemSize);
     free(current);
     list->listSize--;
 
@@ -259,8 +265,9 @@ void *xList_popBack(xList *list)
         list->head = NULL;
     }
 
-    // save data and free memory
-    void *data = current->data;
+    // create a copy of the data, free memory and return the data
+    void *data = (void *)malloc(list->elemSize);
+    xMemCopy(data, current->data, list->elemSize);
     free(current);
     list->listSize--;
 

@@ -51,8 +51,8 @@ xList *xList_new(xSize elemSize);
  * @note
  * Once xList object is freed, it is invalidated and no longer usable with other functions.
  *
- * @warning
- * User is responsible for freeing individual elements if they are dynamically allocated.
+ * @note
+ * All elements in the list are freed as well. If they contain other dynamically allocated data, it should be freed by user before.
  */
 void xList_free(xList *list);
 
@@ -106,6 +106,9 @@ void xList_insert(xList *list, const void *data, xSize index);
  *
  * @note
  * If index is greater than list size, function will return NULL.
+ *
+ * @warning
+ * Element should not be freed as returned address is not its base address. Trying to do so will result in undefined behavior.
  */
 void *xList_get(const xList *list, xSize index);
 
@@ -121,7 +124,7 @@ void *xList_get(const xList *list, xSize index);
  * If index is greater than list size, function will return NULL and do nothing.
  *
  * @warning
- * User is responsible for freeing removed element if it is dynamically allocated.
+ * User is responsible for freeing returned element.
  *
  */
 void *xList_remove(xList *list, xSize index);
@@ -155,7 +158,7 @@ void xList_pushBack(xList *list, const void *data);
  * If list is empty, function will return NULL.
  *
  * @warning
- * Caller is responsible for freeing popped element if it is dynamically allocated.
+ * Caller is responsible for freeing popped element.
  */
 void *xList_popFront(xList *list);
 
@@ -168,6 +171,9 @@ void *xList_popFront(xList *list);
  *
  * @note
  * If list is empty, function will return NULL.
+ *
+ * @warning
+ * Caller is responsible for freeing popped element.
  */
 void *xList_popBack(xList *list);
 
@@ -182,7 +188,7 @@ void *xList_popBack(xList *list);
  * If list is empty, function will return NULL.
  *
  * @warning
- * Element is not removed from the list so it is unsafe to modify or free it.
+ * Returned address is not base address of the element so it should not be freed. Trying to do so will result in undefined behavior.
  */
 void *xList_peekFront(const xList *list);
 
@@ -197,7 +203,7 @@ void *xList_peekFront(const xList *list);
  * If list is empty, function will return NULL.
  *
  * @warning
- * Element is not removed from the list so it is unsafe to modify or free it.
+ * Returned address is not base address of the element so it should not be freed. Trying to do so will result in undefined behavior.
  */
 void *xList_peekBack(const xList *list);
 
@@ -207,8 +213,8 @@ void *xList_peekBack(const xList *list);
  *
  * @param list Pointer to the list object.
  *
- * @warning
- * User is responsible for freeing individual elements if they are dynamically allocated.
+ * @note
+ * If elements contain dynamically allocated data, it should be freed by user before calling this function.
  */
 void xList_clear(xList *list);
 
