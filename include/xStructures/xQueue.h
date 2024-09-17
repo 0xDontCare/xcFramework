@@ -25,7 +25,7 @@ void xQueue_free(xQueue *queue);
 
 extern xSize xQueue_getSize(const xQueue *queue);
 
-extern xSize xQueue_getCapacity(const xQueue *queue);
+// extern xSize xQueue_getCapacity(const xQueue *queue);
 
 extern xSize xQueue_getElemSize(const xQueue *queue);
 
