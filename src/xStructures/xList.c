@@ -311,3 +311,25 @@ void xList_clear(xList *list)
     list->tail = NULL;
     list->listSize = 0;
 }
+
+xList *xList_copy(const xList *list)
+{
+    // validate arguments
+    if (!xList_isValid(list)) {
+        return NULL;
+    }
+
+    // create new list and copy all elements
+    xList *newList = xList_new(list->elemSize);
+    if (!newList) {
+        return NULL;
+    }
+
+    xListNode *current = list->head;
+    while (current) {
+        xList_pushBack(newList, current->data);
+        current = current->next;
+    }
+
+    return newList;
+}

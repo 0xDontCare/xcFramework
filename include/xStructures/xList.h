@@ -218,6 +218,21 @@ void *xList_peekBack(const xList *list);
  */
 void xList_clear(xList *list);
 
+/**
+ * @brief
+ * Copy list to new list.
+ * 
+ * @param list Pointer to the list object.
+ * @return Pointer to new list object with copied data.
+ *
+ * @note
+ * If function fails to allocate memory, it will return invalid xList object.
+ *
+ * @note
+ * Reference to data is copied, so changes to data in one object will affect other object.
+ */
+xList *xList_copy(const xList *list);
+
 #ifdef __cplusplus
 }
 #endif
