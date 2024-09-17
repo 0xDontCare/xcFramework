@@ -1,121 +1,116 @@
 #include "xStructures/xQueue.h"
 #include <stdlib.h>  // malloc, realloc, free
 #include "xBase/xTypes.h"
+#include "xStructures/xList.h"  // under the hood, queue is implemented using linked list
 
 // TODO: remove dependency on stdlib.h (custom memory allocation functions)
 
 struct xQueue_s {
-    void **data;
-    xSize elemSize;
-    xSize queueSize;
-    xSize queueCapacity;
+    xList *internalList;
 };
 
 xQueue *xQueue_new(xSize elemSize)
 {
+    // validate passed argument
     if (elemSize == 0) {
         return NULL;
     }
 
+    // allocate memory for the queue
     xQueue *queue = (xQueue *)malloc(sizeof(xQueue));
     if (!queue) {
         return NULL;
     }
 
-    queue->elemSize = elemSize;
-    queue->queueSize = 0;
-    queue->queueCapacity = 0;
-    queue->data = NULL;
+    // allocate memory for the internal list structure
+    queue->internalList = xList_new(elemSize);
+    if (!xQueue_isValid(queue)) {
+        free(queue);
+        return NULL;
+    }
+
     return queue;
 }
 
 void xQueue_free(xQueue *queue)
 {
-    if (!queue || !queue->data) {
+    // validate passed argument
+    if (!queue) {
         return;
     }
 
-    free(queue->data);
-    queue->data = NULL;
-    queue->queueSize = 0;
-    queue->queueCapacity = 0;
-    queue->elemSize = 0;
+    // free the internal list and queue itself
+    if (xQueue_isValid(queue)) {
+        xList_free(queue->internalList);
+    }
+
+    queue->internalList = NULL;
+    free(queue);
 }
 
-inline xSize xQueue_getSize(const xQueue *queue) { return (queue) ? queue->queueSize : 0; }
+inline xSize xQueue_getSize(const xQueue *queue) { return (queue) ? xList_getSize(queue->internalList) : 0; }
 
-inline xSize xQueue_getCapacity(const xQueue *queue) { return (queue) ? queue->queueCapacity : 0; }
+inline xSize xQueue_getElemSize(const xQueue *queue) { return (queue) ? xList_getElemSize(queue->internalList) : 0; }
 
-inline xSize xQueue_getElemSize(const xQueue *queue) { return (queue) ? queue->elemSize : 0; }
-
-inline xBool xQueue_isValid(const xQueue *queue) { return (queue && queue->elemSize) ? true : false; }
+inline xBool xQueue_isValid(const xQueue *queue) { return (queue && xList_isValid(queue->internalList)) ? true : false; }
 
 void xQueue_enqueue(xQueue *queue, const void *data)
 {
+    // validate passed arguments
     if (!xQueue_isValid(queue) || !data) {
         return;
     }
 
-    if (queue->queueCapacity < queue->queueSize + 1) {
-        void **newData =
-            (void **)realloc(queue->data, ((queue->queueCapacity == 0) ? 1 : queue->queueCapacity * 2) * sizeof(void *));
-        if (!newData) {
-            return;
-        }
-
-        queue->data = newData;
-        queue->queueCapacity = (queue->queueCapacity == 0) ? 1 : queue->queueCapacity * 2;
-    }
-
-    queue->data[queue->queueSize] = (void *)data;
-    queue->queueSize++;
+    // push the data to the back of the internal list
+    xList_pushBack(queue->internalList, data);
 }
 
 void *xQueue_dequeue(xQueue *queue)
 {
-    if (!xQueue_isValid(queue) || queue->queueSize == 0) {
+    // validate passed argument
+    if (!xQueue_isValid(queue)) {
         return NULL;
     }
 
-    void *ret = queue->data[0];
-    for (xSize i = 1; i < queue->queueSize; i++) {
-        queue->data[i - 1] = queue->data[i];
-    }
-
-    queue->queueSize--;
-    return ret;
+    // pop the front element from the internal list and return it
+    return xList_popFront(queue->internalList);
 }
 
 const void *xQueue_peek(const xQueue *queue)
 {
-    if (!xQueue_isValid(queue) || queue->queueSize == 0) {
+    // validate passed argument
+    if (!xQueue_isValid(queue)) {
         return NULL;
     }
 
-    return (const void *)queue->data[0];
+    // return the front element of the internal list without removing it
+    return (const void *)xList_peekFront(queue->internalList);
 }
 
 void xQueue_clear(xQueue *queue)
 {
-    for (xSize i = 0; i < queue->queueSize; i++) {
-        queue->data[i] = NULL;
+    // validate passed argument
+    if (!xQueue_isValid(queue)) {
+        return;
     }
 
-    queue->queueSize = 0;
+    // clear the internal list
+    xList_clear(queue->internalList);
 }
 
 xQueue *xQueue_copy(const xQueue *queue)
 {
+    // validate passed argument
     if (!xQueue_isValid(queue)) {
-        return xQueue_new(0);
+        return NULL;
     }
 
-    xQueue *newQueue = xQueue_new(queue->elemSize);
-    if (xQueue_isValid(newQueue)) {
-        for (xSize i = 0; i < queue->queueSize; i++) {
-            xQueue_enqueue(newQueue, queue->data[i]);
-        }
+    // create a new queue and copy the internal list
+    xQueue *newQueue = (xQueue *)malloc(sizeof(xQueue));
+    if (!newQueue) {
+        return NULL;
     }
+    newQueue->internalList = xList_copy(queue->internalList);
 
     return newQueue;
 }
