@@ -177,7 +177,7 @@ void test_xQueue_copy(void)
 
     // Test case 1: Copy empty queue
     xQueue *copy = xQueue_copy(queue);
-    CU_ASSERT_PTR_NULL(copy);
+    CU_ASSERT_PTR_NOT_NULL(copy);
 
     // Test case 2: Copy non-empty queue
     for (xSize i = 0; i < sizeof(values) / sizeof(values[0]); i++) {
