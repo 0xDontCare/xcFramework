@@ -24,15 +24,16 @@ The "eXtra C Framework" includes a set of commonly used data structures and func
 - Mathematical matrix operations module (`xMatrix.h`)
 - Dynamic generic linked list implementation (`xList.h`)
 - Dynamic generic stack implementation (`xStack.h`)
+- Dynamic generic queue implementation (`xQueue.h`)
 ### Listed modules are tested and ready for use in projects
 
 ## Experimental modules (lacking tests, documentation or are incomplete):
 - Dynamic generic treemap implementation (`xDictionary.h`)
-- Dynamic generic queue implementation (`xQueue.h`)
 - Custom memory allocation module (`xAlloc.h`)
 ### These modules are available in respective `dev-X` branches, bugs and issues are expected until proper testing is done
 
 ## Planned modules (could be implemented in the future):
+- Ability to set underlying structures in higher complexity structures (e.g. queue and stack can use linked list or array as internal structure)
 - Hash table implementation
 - Priority queue implementation
 - File I/O module
