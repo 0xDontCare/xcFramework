@@ -11,14 +11,21 @@ struct xQueue_s {
     xSize queueCapacity;
 };
 
-xQueue xQueue_new(xSize elemSize)
+xQueue *xQueue_new(xSize elemSize)
 {
     if (elemSize == 0) {
-        return (xQueue){0};
+        return NULL;
     }
 
-    xQueue queue = {0};
-    queue.elemSize = elemSize;
+    xQueue *queue = (xQueue *)malloc(sizeof(xQueue));
+    if (!queue) {
+        return NULL;
+    }
+
+    queue->elemSize = elemSize;
+    queue->queueSize = 0;
+    queue->queueCapacity = 0;
+    queue->data = NULL;
     return queue;
 }
 
@@ -41,7 +48,7 @@ inline xSize xQueue_getCapacity(const xQueue *queue) { return (queue) ? queue->q
 
 inline xSize xQueue_getElemSize(const xQueue *queue) { return (queue) ? queue->elemSize : 0; }
 
-inline xBool xQueue_isValid(const xQueue *queue) { return (queue && queue->data && queue->elemSize) ? true : false; }
+inline xBool xQueue_isValid(const xQueue *queue) { return (queue && queue->elemSize) ? true : false; }
 
 void xQueue_enqueue(xQueue *queue, const void *data)
 {
@@ -97,16 +104,16 @@ void xQueue_clear(xQueue *queue)
     queue->queueSize = 0;
 }
 
-xQueue xQueue_copy(const xQueue *queue)
+xQueue *xQueue_copy(const xQueue *queue)
 {
     if (!xQueue_isValid(queue)) {
         return xQueue_new(0);
     }
 
-    xQueue newQueue = xQueue_new(queue->elemSize);
-    if (xQueue_isValid(&newQueue)) {
+    xQueue *newQueue = xQueue_new(queue->elemSize);
+    if (xQueue_isValid(newQueue)) {
         for (xSize i = 0; i < queue->queueSize; i++) {
-            xQueue_enqueue(&newQueue, queue->data[i]);
+            xQueue_enqueue(newQueue, queue->data[i]);
         }
     }
 
