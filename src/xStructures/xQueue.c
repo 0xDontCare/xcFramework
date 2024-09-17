@@ -111,6 +111,10 @@ xQueue *xQueue_copy(const xQueue *queue)
         return NULL;
     }
     newQueue->internalList = xList_copy(queue->internalList);
+    if (!xQueue_isValid(newQueue)) {
+        free(newQueue);
+        return NULL;
+    }
 
     return newQueue;
 }
