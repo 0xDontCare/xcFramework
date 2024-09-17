@@ -335,6 +335,37 @@ void test_xList_clear(void)
     xList_free(list);
 }
 
+void test_xList_copy(void)
+{
+    xList *list = xList_new(sizeof(xUInt32));
+    xUInt32 values[] = {0x12345678, 0x9ABCDEF0, 0x13579BDF, 0x2468ACE0, 0x369BCEF0};
+
+    // Test case 1: Copy empty list
+    xList *copy = xList_copy(list);
+    CU_ASSERT_PTR_NOT_NULL(copy);
+    CU_ASSERT_EQUAL(xList_getSize(copy), 0);
+    xList_free(copy);
+
+    // Test case 2: Copy non-empty list
+    for (xSize i = 0; i < 5; i++) {
+        xList_pushBack(list, &values[i]);
+    }
+    copy = xList_copy(list);
+    CU_ASSERT_PTR_NOT_NULL(copy);
+    CU_ASSERT_EQUAL(xList_getSize(copy), 5);
+    for (xSize i = 0; i < 5; i++) {
+        CU_ASSERT_EQUAL(*(xUInt32 *)xList_get(copy, i), values[i]);
+    }
+    xList_free(copy);
+
+    // Test case 3: Copy NULL list
+    copy = xList_copy(NULL);
+    CU_ASSERT_PTR_NULL(copy);
+
+    // Cleanup
+    xList_free(list);
+}
+
 int main(void)
 {
     CU_pSuite pSuite = NULL;
@@ -363,7 +394,8 @@ int main(void)
         CU_add_test(pSuite, "xList_popFront", test_xList_popFront) == NULL ||
         CU_add_test(pSuite, "xList_popBack", test_xList_popBack) == NULL ||
         CU_add_test(pSuite, "xList_remove", test_xList_remove) == NULL ||
-        CU_add_test(pSuite, "xList_clear", test_xList_clear) == NULL) {
+        CU_add_test(pSuite, "xList_clear", test_xList_clear) == NULL ||
+        CU_add_test(pSuite, "xList_copy", test_xList_copy) == NULL) {
         CU_cleanup_registry();
         return CU_get_error();
     }
