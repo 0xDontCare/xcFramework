@@ -608,3 +608,49 @@ xMatrix *xMatrix_mapScalar(const xMatrix *matrix, float scalar, float (*func)(fl
 
     return mat;
 }
+
+float *xMatrix_flatten(const xMatrix *matrix)
+{
+    // validate arguments
+    if (!xMatrix_isValid(matrix)) {
+        return NULL;
+    }
+
+    // create array to store flattened matrix
+    float *arr = (float *)malloc(matrix->rows * matrix->cols * sizeof(float));
+    if (!arr) {
+        return NULL;
+    }
+
+    // copy data
+    for (xSize i = 0; i < matrix->rows; i++) {
+        for (xSize j = 0; j < matrix->cols; j++) {
+            arr[i * matrix->cols + j] = xMatrix_get(matrix, i, j);
+        }
+    }
+
+    return arr;
+}
+
+xMatrix *xMatrix_unflatten(const float *arr, xSize rows, xSize cols)
+{
+    // validate arguments
+    if (!arr || !rows || !cols) {
+        return NULL;
+    }
+
+    // create matrix to store unflattened array
+    xMatrix *mat = xMatrix_new(rows, cols);
+    if (!xMatrix_isValid(mat)) {
+        return NULL;
+    }
+
+    // copy data
+    for (xSize i = 0; i < rows; i++) {
+        for (xSize j = 0; j < cols; j++) {
+            xMatrix_set(mat, i, j, arr[i * cols + j]);
+        }
+    }
+
+    return mat;
+}

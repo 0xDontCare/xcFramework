@@ -471,6 +471,42 @@ xMatrix *xMatrix_map2(const xMatrix *lhs, const xMatrix *rhs, float (*func)(floa
  */
 xMatrix *xMatrix_mapScalar(const xMatrix *matrix, float scalar, float (*func)(float, float));
 
+/**
+ * @brief
+ * Flatten matrix to contiguous array.
+ *
+ * @param matrix Pointer to xMatrix object.
+ * @return Array of floats containing all matrix elements in row-major order.
+ *
+ * @note
+ * If matrix is invalid or array allocation fails, NULL is returned.
+ *
+ * @note
+ * Returned array should be freed using free() function.
+ *
+ * @note
+ * Flattened array size is equal to number of rows multiplied by number of columns of input matrix.
+ */
+float *xMatrix_flatten(const xMatrix *matrix);
+
+/**
+ * @brief
+ * Unflatten contiguous array to matrix.
+ *
+ * @param data Pointer to row-major array of floats.
+ * @param rows Number of rows.
+ * @param cols Number of columns.
+ * @return Pointer to xMatrix object created from array data.
+ *
+ * @note
+ * If array is NULL or allocation fails, NULL is returned.
+ *
+ * @warning
+ * Array length should be equal to product of `rows` and `cols`. Otherwise, behaviour is undefined and could likely lead to memory
+ * access violation.
+ */
+xMatrix *xMatrix_unflatten(const float *data, xSize rows, xSize cols);
+
 #ifdef __cplusplus
 }
 #endif  // __cplusplus
