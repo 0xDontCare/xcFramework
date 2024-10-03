@@ -2,8 +2,8 @@
  * @file xMatrix_test.c
  * @author 0xDontCare (https://www.github.com/0xDontCare)
  * @brief CUnit test for all functions within xMatrix module.
- * @version 0.1
- * @date 14.09.2024.
+ * @version 0.2
+ * @date 04.10.2024.
  */
 
 #include <CUnit/Basic.h>

@@ -2,8 +2,8 @@
  * @file xMatrix.h
  * @author 0xDontCare (https://github.com/0xDontCare)
  * @brief Matrix structure and functions.
- * @version 0.10
- * @date 26.07.2024.
+ * @version 0.11
+ * @date 04.10.2024.
  *
  * Module declares matrix structure and mathematical operations applicable to them. All functions have prefix `xMatrix_`.
  */
