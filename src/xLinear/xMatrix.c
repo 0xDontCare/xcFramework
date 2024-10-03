@@ -17,32 +17,35 @@ xMatrix *xMatrix_new(xSize rows, xSize cols)
         return NULL;
     }
 
-    // create matrix object
-    xMatrix *mat = (xMatrix *)malloc(sizeof(xMatrix));
+    // create matrix object and allocate memory for data
+    xMatrix *mat = (xMatrix *)malloc(sizeof(xMatrix) + rows * cols * sizeof(float));
     if (!mat) {
         return NULL;
     }
-    mat->data = (float *)calloc(rows * cols, sizeof(float));
-    if (!mat->data) {
-        free(mat);
-        return NULL;
-    }
+
+    mat->data = (float *)(mat + 1);
     mat->rows = rows;
     mat->cols = cols;
+
+    // zero-initialize matrix data
+    for (xSize i = 0; i < rows * cols; i++) {
+        mat->data[i] = 0.0f;
+    }
 
     return mat;
 }
 
 void xMatrix_free(xMatrix *matrix)
 {
+    // validate arguments
     if (!matrix) {
         return;
     }
 
-    if (matrix->data) {
-        free(matrix->data);
-        matrix->data = NULL;
-    }
+    // set matrix attributes to zero (invalidate matrix)
+    matrix->data = NULL;
+    matrix->rows = 0;
+    matrix->cols = 0;
 
     free(matrix);
 }
