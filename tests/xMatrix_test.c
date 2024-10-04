@@ -2,13 +2,14 @@
  * @file xMatrix_test.c
  * @author 0xDontCare (https://www.github.com/0xDontCare)
  * @brief CUnit test for all functions within xMatrix module.
- * @version 0.1
- * @date 14.09.2024.
+ * @version 0.2
+ * @date 04.10.2024.
  */
 
 #include <CUnit/Basic.h>
 #include <CUnit/CUnit.h>
 #include <CUnit/TestDB.h>
+#include <malloc.h>
 #include <math.h>
 #include "xBase/xTypes.h"
 #include "xLinear/xMatrix.h"
@@ -828,6 +829,48 @@ void test_xMatrix_mapScalar(void)
     xMatrix_free(mapped);
 }
 
+void test_xMatrix_flatten(void)
+{
+    // Test case 1: Flattening NULL matrix
+    xMatrix *mat = NULL;
+    float *flat = xMatrix_flatten(mat);
+    CU_ASSERT_PTR_NULL(flat);
+
+    // Test case 2: Flattening valid matrix
+    mat = xMatrix_new(3, 3);
+    xMatrix_fill(mat, 1.0f);
+    flat = xMatrix_flatten(mat);
+    CU_ASSERT_PTR_NOT_NULL(flat);
+    for (xSize i = 0; i < xMatrix_getRows(mat) * xMatrix_getCols(mat); i++) {
+        CU_ASSERT_EQUAL(flat[i], 1.0f);
+    }
+    xMatrix_free(mat);
+    free(flat);
+}
+
+void test_xMatrix_unflatten(void)
+{
+    // test case arrays
+    float *arr1 = NULL;
+    float arr2[] = {1.0f, 2.0f, 3.0f, 4.0f, 5.0f, 6.0f, 7.0f, 8.0f, 9.0f};
+    xMatrix *mat = NULL;
+
+    // Test case 1: Unflattening NULL array
+    mat = xMatrix_unflatten(arr1, 3, 3);
+    CU_ASSERT_PTR_NULL(mat);
+
+    // Test case 2: Unflattening valid array
+    mat = xMatrix_unflatten(arr2, 3, 3);
+    CU_ASSERT_PTR_NOT_NULL(mat);
+    CU_ASSERT_TRUE(xMatrix_isValid(mat));
+    for (xSize i = 0; i < xMatrix_getRows(mat); i++) {
+        for (xSize j = 0; j < xMatrix_getCols(mat); j++) {
+            CU_ASSERT_EQUAL(xMatrix_get(mat, i, j), arr2[i * 3 + j]);
+        }
+    }
+    xMatrix_free(mat);
+}
+
 int main(void)
 {
     CU_pSuite suite = NULL;
@@ -866,7 +909,9 @@ int main(void)
         (CU_add_test(suite, "xMatrix_minor", test_xMatrix_minor) == NULL) ||
         (CU_add_test(suite, "xMatrix_map", test_xMatrix_map) == NULL) ||
         (CU_add_test(suite, "xMatrix_map2", test_xMatrix_map2) == NULL) ||
-        (CU_add_test(suite, "xMatrix_mapScalar", test_xMatrix_mapScalar) == NULL)) {
+        (CU_add_test(suite, "xMatrix_mapScalar", test_xMatrix_mapScalar) == NULL) ||
+        (CU_add_test(suite, "xMatrix_flatten", test_xMatrix_flatten) == NULL) ||
+        (CU_add_test(suite, "xMatrix_unflatten", test_xMatrix_unflatten) == NULL)) {
         CU_cleanup_registry();
         return CU_get_error();
     }

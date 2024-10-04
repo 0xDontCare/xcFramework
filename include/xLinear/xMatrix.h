@@ -2,8 +2,8 @@
  * @file xMatrix.h
  * @author 0xDontCare (https://github.com/0xDontCare)
  * @brief Matrix structure and functions.
- * @version 0.10
- * @date 26.07.2024.
+ * @version 0.11
+ * @date 04.10.2024.
  *
  * Module declares matrix structure and mathematical operations applicable to them. All functions have prefix `xMatrix_`.
  */
@@ -149,6 +149,18 @@ xMatrix *xMatrix_transpose(const xMatrix *matrix);
 
 /**
  * @brief
+ * Perform in-place matrix transposition.
+ *
+ * @param matrix Pointer to xMatrix object.
+ * @return Passthrough pointer to matrix from input.
+ *
+ * @note
+ * If passed matrix is invalid, no operation is performed and NULL is returned.
+ */
+xMatrix *xMatrix_transpose_inplace(xMatrix *matrix);
+
+/**
+ * @brief
  * Add two matrices.
  *
  * @param lhs Left-hand side matrix.
@@ -159,6 +171,20 @@ xMatrix *xMatrix_transpose(const xMatrix *matrix);
  * If either of passed matrices are invalid or they don't have same dimensions, NULL is returned.
  */
 xMatrix *xMatrix_add(const xMatrix *lhs, const xMatrix *rhs);
+
+/**
+ * @brief
+ * Add two matrices and store result in third matrix without allocating new matrix.
+ *
+ * @param res Matrix to store result in.
+ * @param lhs Left-hand side matrix.
+ * @param rhs Right-hand side matrix.
+ * @return Passthrough pointer to res matrix.
+ *
+ * @note
+ * If either of passed matrices are invalid or they don't have same dimensions, no operation is performed and NULL is returned.
+ */
+xMatrix *xMatrix_add_inplace(xMatrix *res, const xMatrix *lhs, const xMatrix *rhs);
 
 /**
  * @brief
@@ -175,6 +201,20 @@ xMatrix *xMatrix_sub(const xMatrix *lhs, const xMatrix *rhs);
 
 /**
  * @brief
+ * Subtract two matrices and store result in third matrix without allocating new matrix.
+ *
+ * @param res Matrix to store result in.
+ * @param lhs Left-hand side matrix.
+ * @param rhs Right-hand side matrix.
+ * @return Passthrough pointer to res matrix.
+ *
+ * @note
+ * If either of passed matrices are invalid or they don't have same dimensions, no operation is performed and NULL is returned.
+ */
+xMatrix *xMatrix_sub_inplace(xMatrix *res, const xMatrix *lhs, const xMatrix *rhs);
+
+/**
+ * @brief
  * Multiply two matrices.
  *
  * @param lhs Left-hand side matrix.
@@ -182,9 +222,23 @@ xMatrix *xMatrix_sub(const xMatrix *lhs, const xMatrix *rhs);
  * @return Pointer to xMatrix object containing matrix product of two matrices.
  *
  * @note
- * If either of passed matrices is invalid or they have incompatible dimensions, NULL is returned.
+ * If either of passed matrices are invalid or they have incompatible dimensions, NULL is returned.
  */
 xMatrix *xMatrix_mul(const xMatrix *lhs, const xMatrix *rhs);
+
+/**
+ * @brief
+ * Multiply two matrices and store result in third matrix without allocating new matrix.
+ *
+ * @param res Matrix to store result in.
+ * @param lhs Left-hand side matrix.
+ * @param rhs Right-hand side matrix.
+ * @return Passthrough pointer to res matrix.
+ *
+ * @note
+ * If either of passed matrices are invalid or they have incompatible dimensions, no operation is performed and NULL is returned.
+ */
+xMatrix *xMatrix_mul_inplace(xMatrix *res, const xMatrix *lhs, const xMatrix *rhs);
 
 /**
  * @brief
@@ -204,6 +258,23 @@ xMatrix *xMatrix_dotmul(const xMatrix *lhs, const xMatrix *rhs);
 
 /**
  * @brief
+ * Calculate Hadamard product of two matrices and store result in third matrix without allocating new matrix.
+ *
+ * @param res Matrix to store result in.
+ * @param lhs Left-hand side matrix.
+ * @param rhs Right-hand side matrix.
+ * @return Passthrough pointer to res matrix.
+ *
+ * @note
+ * If either of passed matrices are invalid or they don't have same dimensions, no operation is performed and NULL is returned.
+ *
+ * @note
+ * Hadamard product is element-wise multiplication of two matrices.
+ */
+xMatrix *xMatrix_dotmul_inplace(xMatrix *res, const xMatrix *lhs, const xMatrix *rhs);
+
+/**
+ * @brief
  * Add scalar to matrix.
  *
  * @param matrix Pointer to xMatrix object.
@@ -214,6 +285,20 @@ xMatrix *xMatrix_dotmul(const xMatrix *lhs, const xMatrix *rhs);
  * If passed matrix is invalid, NULL is returned.
  */
 xMatrix *xMatrix_scalarAdd(const xMatrix *matrix, float scalar);
+
+/**
+ * @brief
+ * Add scalar to matrix and store result in third matrix without allocating new matrix.
+ *
+ * @param res Pointer to xMatrix object to store result in.
+ * @param matrix Pointer to xMatrix object.
+ * @param scalar Scalar value to add to each element.
+ * @return Passthrough pointer to res matrix.
+ *
+ * @note
+ * If passed matrix is invalid, no operation is performed and NULL is returned.
+ */
+xMatrix *xMatrix_scalarAdd_inplace(xMatrix *res, const xMatrix *matrix, float scalar);
 
 /**
  * @brief
@@ -230,6 +315,20 @@ xMatrix *xMatrix_scalarSub(const xMatrix *matrix, float scalar);
 
 /**
  * @brief
+ * Subtract scalar from matrix and store result in third matrix without allocating new matrix.
+ *
+ * @param res Pointer to xMatrix object to store result in.
+ * @param matrix Pointer to xMatrix object.
+ * @param scalar Scalar value to subtract from each element.
+ * @return Passthrough pointer to res matrix.
+ *
+ * @note
+ * If passed matrix is invalid, no operation is performed and NULL is returned.
+ */
+xMatrix *xMatrix_scalarSub_inplace(xMatrix *res, const xMatrix *matrix, float scalar);
+
+/**
+ * @brief
  * Multiply matrix by scalar.
  *
  * @param matrix Pointer to xMatrix object.
@@ -240,6 +339,20 @@ xMatrix *xMatrix_scalarMul(const xMatrix *matrix, float scalar);
 
 /**
  * @brief
+ * Multiply matrix by scalar and store result in third matrix without allocating new matrix.
+ *
+ * @param res Pointer to xMatrix object to store result in.
+ * @param matrix Pointer to xMatrix object.
+ * @param scalar Scalar value to multiply each element by.
+ * @return Passthrough pointer to res matrix.
+ *
+ * @note
+ * If passed matrix is invalid, no operation is performed and NULL is returned.
+ */
+xMatrix *xMatrix_scalarMul_inplace(xMatrix *res, const xMatrix *matrix, float scalar);
+
+/**
+ * @brief
  * Divide matrix by scalar.
  *
  * @param matrix Pointer to xMatrix object.
@@ -247,6 +360,20 @@ xMatrix *xMatrix_scalarMul(const xMatrix *matrix, float scalar);
  * @return Pointer to xMatrix object containing matrix scaled by reciprocal of scalar.
  */
 xMatrix *xMatrix_scalarDiv(const xMatrix *matrix, float scalar);
+
+/**
+ * @brief
+ * Divide matrix by scalar and store result in third matrix without allocating new matrix.
+ *
+ * @param res Pointer to xMatrix object to store result in.
+ * @param matrix Pointer to xMatrix object.
+ * @param scalar Scalar value to divide each element by.
+ * @return Passthrough pointer to res matrix.
+ *
+ * @note
+ * If passed matrix is invalid, no operation is performed and NULL is returned.
+ */
+xMatrix *xMatrix_scalarDiv_inplace(xMatrix *res, const xMatrix *matrix, float scalar);
 
 /**
  * @brief
@@ -343,6 +470,42 @@ xMatrix *xMatrix_map2(const xMatrix *lhs, const xMatrix *rhs, float (*func)(floa
  * Function should take two floats as arguments and return float.
  */
 xMatrix *xMatrix_mapScalar(const xMatrix *matrix, float scalar, float (*func)(float, float));
+
+/**
+ * @brief
+ * Flatten matrix to contiguous array.
+ *
+ * @param matrix Pointer to xMatrix object.
+ * @return Array of floats containing all matrix elements in row-major order.
+ *
+ * @note
+ * If matrix is invalid or array allocation fails, NULL is returned.
+ *
+ * @note
+ * Returned array should be freed using free() function.
+ *
+ * @note
+ * Flattened array size is equal to number of rows multiplied by number of columns of input matrix.
+ */
+float *xMatrix_flatten(const xMatrix *matrix);
+
+/**
+ * @brief
+ * Unflatten contiguous array to matrix.
+ *
+ * @param data Pointer to row-major array of floats.
+ * @param rows Number of rows.
+ * @param cols Number of columns.
+ * @return Pointer to xMatrix object created from array data.
+ *
+ * @note
+ * If array is NULL or allocation fails, NULL is returned.
+ *
+ * @warning
+ * Array length should be equal to product of `rows` and `cols`. Otherwise, behaviour is undefined and could likely lead to memory
+ * access violation.
+ */
+xMatrix *xMatrix_unflatten(const float *data, xSize rows, xSize cols);
 
 #ifdef __cplusplus
 }
